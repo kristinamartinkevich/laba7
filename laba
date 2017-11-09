@@ -1,0 +1,161 @@
+using System;
+
+
+namespace lab7
+{
+	class Program
+	{
+
+		//Функции обработки исключений в языке C# помогают вам справиться с непредвиденными
+        //или исключительными проблемами, которые возникают при выполнении программы. Обработка 
+        //исключений использует ключевые слова try, catch и finally для действий, которые могут оказаться неудачными.
+        //Чтобы создать исключение, используйте ключевое слово throw.
+		//В этом примере метод выполняет проверку деления на нуль и перехватывает ошибку.
+        //Если не использовать обработку исключений, такая программа завершит работу с ошибкой DivideByZeroException
+        //was unhandled (Исключение DivideByZero не обработано).
+
+//class ExceptionTest
+		//{
+			//static double SafeDivision(double x, double y)
+			//{
+			//	if (y == 0)
+			//		throw new System.DivideByZeroException();
+			//	return x / y;
+			//}
+			//static void Main()
+			//{
+			//	 Input for test purposes. Change the values to see
+			//	 exception handling behavior.
+			//	double a = 98, b = 0;
+			//	double result = 0;
+
+			//	try
+			//	{
+			//		result = SafeDivision(a, b);
+			//		Console.WriteLine("{0} divided by {1} = {2}", a, b, result);
+			//	}
+			//	catch (DivideByZeroException e)
+			//	{
+			//		Console.WriteLine("Attempted divide by zero.");
+			//	}
+			//}
+	//	}
+		//Общие сведения об исключениях
+//Исключения имеют следующие свойства.
+//* Исключения представляют собой типы, производные в конечном счете от System.Exception.
+//* Используйте блок try для выполнения таких инструкций, которые могут создавать исключения. 
+//* Когда внутри такого блока try возникает исключение, поток управления переходит к первому подходящему 
+        //обработчику исключений в стеке вызовов.В C# ключевое слово catch обозначает обработчик исключений. 
+//* Если для созданного исключения не существует обработчиков, выполнение программы прекращается с сообщением об ошибке.
+//* Не перехватывайте исключение, если вы не намерены его обрабатывать с сохранением известного состояния приложения.
+        //Если вы перехватываете System.Exception, создайте его заново в конце блока catch, используя ключевое слово throw. 
+//* Если блок catch определяет переменную исключения, ее можно использовать для получения дополнительных сведений о типе созданного исключения.
+//* Программа может явным образом создавать исключения с помощью ключевого слова throw. 
+//* Объекты исключения содержат подробные сведения об ошибке, например состояние стека вызовов и текстовое описание ошибки. 
+//* Код в блоке finally выполняется даже в том случае, если создано исключение.Используйте блок finally, чтобы высвободить ресурсы, например закрыть потоки и файлы, которые были открыты внутри блока try. 
+
+        //try-контролируемый блок
+        //throw-генерация искл ситауции внутри try
+        //catch-обработчики исклбчений идут за try
+        //finally-код очищающий ресурсы и др действий(выпол всегда)
+
+
+		static void Main(string[] args)
+		{
+			try
+			{
+				Person p = new Person();
+				p.Age = 17;
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine("Ошибка: " + ex.Message);
+				Console.WriteLine("Метод: " + ex.TargetSite); // Void set_Age(Int32)
+
+			}
+			int i = 123;
+			string s = "Some string";
+			object obj = s;
+
+			try
+			{
+				// Invalid conversion; obj contains a string, not a numeric type.
+				i = (int)obj;
+
+				// The following statement is not run.
+				Console.WriteLine("WriteLine at the end of the try block.");
+			}
+			finally
+			{
+				// To run the program in Visual Studio, type CTRL+F5. Then 
+				// click Cancel in the error dialog.
+				Console.WriteLine("\nExecution of the finally block after an unhandled\n" +
+					"error depends on how the exception unwind operation is triggered.");
+				Console.WriteLine("i = {0}", i);
+			}
+			Console.ReadLine();
+		}
+	}
+
+	class Person
+	{
+		private string name;
+		public string Name
+		{
+			get { return name; }
+			set { name = value; }
+		}
+		private int age;
+		public int Age
+		{
+			get { return age; }
+			set
+			{
+				if (value < 18)
+				{
+					throw new Exception("Лицам до 18 регистрация запрещена");
+				}
+				else
+				{
+					age = value;
+				}
+			}
+		}
+	
+    }
+
+}
+
+
+
+//assert
+
+
+using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace YourProject.Tests
+{
+	public static class MyAssert
+	{
+		public static void Throws<T>(Action func) where T : Exception
+		{
+			var exceptionThrown = false;
+			try
+			{
+				func.Invoke();
+			}
+			catch (T)
+			{
+				exceptionThrown = true;
+			}
+
+			if (!exceptionThrown)
+			{
+				throw new AssertFailedException(
+					String.Format("An exception of type {0} was expected, but not thrown", typeof(T))
+					);
+			}
+		}
+	}
+}
